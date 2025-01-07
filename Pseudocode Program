@@ -1,0 +1,145 @@
+MULAI
+DEKLARASI BufferedReader input
+    DEKLARASI pilihan, JumlahPelanggan, ulang, nama[], noHP[], layanan[][], klayanan[], hrg[][], subThrg[], gThrg[]
+MAIN FUNCTION
+    PRINT "24.240.0055 | M. NAUFAL ALRUN"
+    CALL menu()
+MENU FUNCTION
+    FUNCTION menu()
+        PRINT "KIA MOTOR PEKALONGAN"
+        PRINT "========MENU========"
+        PRINT "[1] Tampilkan isi Data"
+        PRINT "[2] Tambah Data"
+        PRINT "[3] Koreksi / Edit Data"
+        PRINT "[4] Hapus Data"
+        PRINT "[5] Lihat Laporan"
+        PRINT "[6] Exit"
+        PRINT "Silahkan Pilih Menu >"
+TRY
+            pilihan = INPUT Integer
+CATCH NumberFormatException
+            PRINT "Pilihan layanan tidak valid."
+            CALL menu()
+            RETURN
+
+SWITCH pilihan
+            CASE 1:
+                CALL showAllData()
+            CASE 2:
+                CALL tambahPaket()
+            CASE 3:
+                CALL editPaket()
+            CASE 4:
+                CALL hapusPaket()
+            CASE 5:
+                CALL laporan()
+            CASE 6:
+                EXIT
+            DEFAULT:
+                PRINT "Mohon Pilih Menu Yang Benar!"
+END SWITCH
+END FUNCTION
+
+SHOW ALL DATA FUNCTION
+FUNCTION   showAllData()
+IF         JumlahPelanggan == 0 THEN
+            PRINT "Belum ada data pelanggan yang tersimpan."
+ELSE
+DEKLARASI   dataPerHalaman, halaman, subtotalHalaman
+FOR         i = 0 TO JumlahPelanggan STEP dataPerHalaman DO
+                PRINT "DATA KIA MOTOR PEKALONGAN"
+FOR         j = 0 TO dataPerHalaman
+                    PRINT Pelanggan[i + j]
+HITUNG subtotal
+                subtotalHalaman += subtotal
+END FOR
+                PRINT "Subtotal Halaman", subtotalHalaman
+END FOR
+END IF
+        CALL menu()
+END FUNCTION
+
+ADD DATA FUNCTION
+FUNCTION   tambahPaket()
+        PRINT "ISI DATA PELANGGAN KIA MOTOR PEKALONGAN"
+DO
+            INPUT nama[JumlahPelanggan]
+            INPUT noHP[JumlahPelanggan]
+            DECLARE jumlahLayanan
+DO
+                PRINT "Pilih Layanan Jasa Bengkel:"
+                PRINT "[1] Servis Ringan + Ganti Oli"
+                PRINT "[2] Ganti oli"
+                PRINT "[3] Service 4 Ban + Ganti 4 Kampas Rem"
+                PRINT "[4] Ganti aki"
+                PRINT "[5] Service Rutin 20KM"
+                INPUT klayanan[jumlahLayanan]
+                VALIDATE klayanan[jumlahLayanan]
+                STORE layanan, hrg
+                INCREMENT jumlahLayanan
+                INPUT ulang
+WHILE ulang == 'Y'
+            INCREMENT JumlahPelanggan
+            INPUT ulang
+WHILE ulang == 'Y'
+        CALL menu()
+END FUNCTION
+
+EDIT DATA FUNCTION
+FUNCTION     editPaket()
+IF          JumlahPelanggan == 0 THEN
+            PRINT "Belum ada data pelanggan yang tersimpan."
+ELSE
+            PRINT Pelanggan List
+            INPUT nomor
+            VALIDATE nomor
+            INPUT nama, noHP, layanan, hrg
+            PRINT "Data pelanggan berhasil diedit."
+END IF
+        CALL menu()
+END FUNCTION
+
+DELETE DATA FUNCTION
+FUNCTION hapusPaket()
+IF          JumlahPelanggan == 0 THEN
+            PRINT "Belum ada data pelanggan yang tersimpan."
+ELSE
+            PRINT Pelanggan List
+INPUT nomor
+VALIDATE nomor
+DELETE data[nomor]
+            PRINT "Data pelanggan berhasil dihapus."
+END IF
+        CALL menu()
+END FUNCTION
+
+VIEW REPORT FUNCTION
+FUNCTION laporan()
+IF          JumlahPelanggan == 0 THEN
+            PRINT "Belum ada data pelanggan yang tersimpan."
+ELSE
+            PRINT Pelanggan List
+INPUT nomor
+VALIDATE nomor
+            PRINT "Data Pelanggan"
+END IF
+        CALL menu()
+END FUNCTION
+
+HELPER FUNCTIONS
+FUNCTION concatenateServices(nomor)
+        RETURN concatenated services string
+END FUNCTION
+
+FUNCTION calculateTotalServicePrice(nomor)
+        RETURN total service price
+END FUNCTION
+
+FUNCTION getServiceName(klayanan)
+        RETURN service name
+END FUNCTION
+
+FUNCTION getServicePrice(klayanan)
+        RETURN service price
+END FUNCTION
+SELESAI
