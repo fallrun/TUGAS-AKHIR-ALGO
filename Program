@@ -1,0 +1,389 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package tugasakhir;
+import java.io.*;
+import java.io.IOException;
+
+/**
+ *
+ * @author ASUS
+ */
+public class lastwork {
+    
+static BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
+static int pilihan;
+static int JumlahPelanggan = 0;
+static char ulang;
+static String[] nama = new String[50];
+static String[] noHP = new String[50];
+static String[][] layanan = new String[50][10];
+static int[] klayanan = new int[10];
+static double[][] hrg = new double[50][10];
+static double[] subThrg = new double[50];
+static double[] subThrg1 = new double[50];
+static double[] gThrg = new double[50];
+static double[] gThrg1 = new double[50];
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) throws IOException{
+        // TODO code application logic here
+        
+        System.out.println("24.240.0055 | M. NAUFAL ALRUN");
+        System.out.println();
+        menu();
+    
+    }
+    public static void menu() throws IOException {
+        System.out.println("KIA MOTOR PEKALONGAN");
+       System.out.println("========MENU========");
+        System.out.println("[1] Tampilkan isi Data");
+        System.out.println("[2] Tambah Data");
+        System.out.println("[3] Koreksi / Edit Data");
+        System.out.println("[4] Hapus Data");
+        System.out.println("[5] Lihat Laporan");
+        System.out.println("[6] Exit");
+        System.out.print("Silahkan Pilih Menu >");
+        try {
+                    pilihan = Integer.parseInt(input.readLine());
+                } catch (NumberFormatException e) {
+                    System.out.println("Pilihan layanan tidak valid. Harap masukkan angka");
+                    menu();
+                    return;
+                }
+        
+        System.out.println();
+        
+        switch(pilihan) {
+            case 1:
+                showAllData();
+                break;
+            case 2:
+                tambahPaket();
+                break;
+            case 3:
+                editPaket();
+                break;
+            case 4:
+                hapusPaket();
+                break;
+            case 5:
+                laporan();
+                break;
+            case 6:
+                System. exit(0);
+                break;
+            default:
+                System.out.println("Mohon Pilih Menu Yang Benar!");
+        }
+
+    }
+    public static void showAllData() throws IOException {
+    if (JumlahPelanggan == 0) {
+        System.out.println("Belum ada data pelanggan yang tersimpan.");
+        System.out.println();
+    } else {
+        int dataPerHalaman = 3;
+        int halaman = 1;
+        for (int i = 0; i < JumlahPelanggan; i += dataPerHalaman) {
+            System.out.println("DATA KIA MOTOR PEKALONGAN");
+            System.out.println("--------------------------------------------------------------------------------------------------------------------------------------------");
+            System.out.printf("| %15s | %-118s |\n","Hal", halaman);
+            System.out.println("|------------------------------------------------------------------------------------------------------------------------------------------|");
+            System.out.printf("| %-4s | %-20s | %-15s | %-70s | %-15s |\n", "NO", "NAMA PELANGGAN", "NOMOR HP", "LAYANAN", "BIAYA LAYANAN");
+            System.out.println("|------------------------------------------------------------------------------------------------------------------------------------------|");
+            double subtotalHalaman = 0;
+            for (int j = 0; j < dataPerHalaman && i + j < JumlahPelanggan; j++) {
+                int nomor = i + j;
+                System.out.printf("| %-4s | %-20s | %-15s | %-70s | %-15s |\n", nomor + 1, nama[nomor], noHP[nomor], concatenateServices(nomor), calculateTotalServicePrice(nomor));
+                double subtotal = calculateTotalServicePrice(nomor);
+                gThrg[nomor] = subtotal;
+                subtotalHalaman += subtotal;
+            }
+            System.out.println("|------------------------------------------------------------------------------------------------------------------------------------------|");
+            System.out.printf("| %118s | %-15s |\n","Subtotal Halaman", subtotalHalaman);
+            System.out.println("|------------------------------------------------------------------------------------------------------------------------------------------|");
+            if (i + dataPerHalaman >= JumlahPelanggan) {
+                double totalHarga = 0;
+                for (int k = 0; k < JumlahPelanggan; k++) {
+                    totalHarga += gThrg[k];
+                }
+                System.out.printf("| %118s |%-17s|\n", "Total Harga", totalHarga);
+                System.out.println("--------------------------------------------------------------------------------------------------------------------------------------------");
+                System.out.println("Ini adalah halaman terakhir.");
+            }
+            System.out.println();
+            System.out.print("Tekan ENTER untuk melanjutkan!");
+            input.readLine();
+            System.out.println();
+            halaman++;
+        }
+    }
+    menu();
+}
+    public static void tambahPaket() throws IOException {
+        System.out.println("ISI DATA PELANGGAN KIA MOTOR PEKALONGAN");
+        System.out.println();
+        do {
+            System.out.print("Nama pelanggan\t: ");
+            nama[JumlahPelanggan] = input.readLine();
+            System.out.print("Nomor HP pelanggan\t: ");
+                noHP[JumlahPelanggan] = input.readLine();
+           for (int i = 0; i < 10; i++) {
+                layanan[JumlahPelanggan][i] = null;
+                hrg[JumlahPelanggan][i] = 0;
+            }
+            int jumlahLayanan = 0;
+            do {
+                    System.out.println("Pilih Layanan Jasa Bengkel: ");
+                    System.out.println("1\tServis Ringan + Ganti Oli         \t800.000");
+                    System.out.println("2\tGanti oli                         \t400.000");
+                    System.out.println("3\tService 4 Ban + Ganti 4 Kampas Rem\t600.000");
+                    System.out.println("4\tGanti aki                         \t1.100.000");
+                    System.out.println("5\tService Rutin 20KM                \t1.300.000");
+                    System.out.print("Masukkan pilihan layanan (1-5): ");
+                try {
+                    klayanan[jumlahLayanan] = Integer.parseInt(input.readLine());
+                } catch (NumberFormatException e) {
+                    System.out.println("Pilihan layanan tidak valid. Harap masukkan angka.");
+                    menu();
+                    return;
+                }
+                if (klayanan[jumlahLayanan] >= 1 && klayanan[jumlahLayanan] <= 5) {
+                    layanan[JumlahPelanggan][jumlahLayanan] = getServiceName(klayanan[jumlahLayanan]);
+                    hrg[JumlahPelanggan][jumlahLayanan] = getServicePrice(klayanan[jumlahLayanan]);
+                    jumlahLayanan++;
+                    System.out.print("Tambah layanan lagi [Y/T]: ");
+                    ulang = input.readLine().charAt(0);
+                } else {
+                    System.out.println("Pilihan layanan tidak valid. Silakan coba lagi.");
+                }
+            } while ((ulang == 'Y' || ulang == 'y') && jumlahLayanan < 10);
+            System.out.println();
+            JumlahPelanggan++;
+            System.out.print("Isi data lagi [Y/T]: ");
+            ulang = input.readLine().charAt(0);
+            System.out.println();
+        } while (ulang == 'Y' || ulang == 'y');
+        menu();
+    }
+    public static void editPaket() throws IOException {
+        System.out.println("EDIT DATA");
+        System.out.println();
+        if (JumlahPelanggan == 0) {
+            System.out.println("Belum ada data pelanggan yang tersimpan.");
+            System.out.println();
+        } else {
+            System.out.println("Data pelanggan yang tersimpan:");
+            System.out.println();
+
+            for (int i = 0; i < JumlahPelanggan; i++) {
+                System.out.println((i + 1) + ". " + nama[i]);
+            }
+            System.out.println();
+
+            System.out.print("Masukkan nomor data pelanggan yang akan diedit (1-" + JumlahPelanggan + "): ");
+            int nomor = Integer.parseInt(input.readLine());
+            System.out.println();
+
+            if (nomor < 1 || nomor > JumlahPelanggan) {
+                System.out.println("Nomor data pelanggan tidak valid. Silakan coba lagi.");
+                System.out.println();
+            } else {
+                System.out.println("Data pelanggan yang dipilih:");
+                System.out.println();
+                System.out.println("Nama pelanggan: " + nama[nomor - 1]);
+                System.out.println("Nomor HP pelanggan: " + noHP[nomor - 1]);
+                System.out.println("Jenis Layanan pelanggan: " + concatenateServices(nomor - 1));
+                System.out.println("Biaya Layanan pelanggan: " + calculateTotalServicePrice(nomor - 1));
+                System.out.println();
+
+                System.out.print("Masukkan nama pelanggan yang baru: ");
+                nama[nomor - 1] = input.readLine();
+
+                System.out.print("Masukkan nomor HP pelanggan yang baru: ");
+                
+                    noHP[nomor - 1] = input.readLine();
+                   
+
+                for (int i = 0; i < 10; i++) {
+                    layanan[nomor - 1][i] = null;
+                    hrg[nomor - 1][i] = 0;
+                }
+
+                int jumlahLayanan = 0;
+
+                do {
+                    System.out.println("Pilih Layanan Jasa Bengkel: ");
+                    System.out.println("1\tServis Ringan + Ganti Oli         \t800.000");
+                    System.out.println("2\tGanti oli                         \t400.000");
+                    System.out.println("3\tService 4 Ban + Ganti 4 Kampas Rem\t600.000");
+                    System.out.println("4\tGanti aki                         \t1.100.000");
+                    System.out.println("5\tService Rutin 20KM                \t1.300.000");
+                    System.out.print("Masukkan pilihan layanan yang baru (1-5): ");
+                    try {
+                        klayanan[jumlahLayanan] = Integer.parseInt(input.readLine());
+                    } catch (NumberFormatException e) {
+                        System.out.println("Pilihan layanan tidak valid. Harap masukkan angka.");
+                        menu();
+                        return;
+                    }
+
+                    if (klayanan[jumlahLayanan] >= 1 && klayanan[jumlahLayanan] <= 4) {
+                        layanan[nomor - 1][jumlahLayanan] = getServiceName(klayanan[jumlahLayanan]);
+                        hrg[nomor - 1][jumlahLayanan] = getServicePrice(klayanan[jumlahLayanan]);
+
+                        jumlahLayanan++;
+
+                        System.out.print("Tambah layanan lagi [Y/T]: ");
+                        ulang = input.readLine().charAt(0);
+                    } else {
+                        System.out.println("Pilihan layanan tidak valid. Silakan coba lagi.");
+                    }
+
+                } while ((ulang == 'Y' || ulang == 'y') && jumlahLayanan < 10);
+
+                System.out.println("Data pelanggan berhasil diedit.");
+                System.out.println();
+            }
+        }
+        menu();
+    }
+    public static void hapusPaket() throws IOException {
+        System.out.println("HAPUS DATA");
+        System.out.println();
+
+        if (JumlahPelanggan == 0) {
+            System.out.println("Belum ada data pelanggan yang tersimpan.");
+            System.out.println();
+        } else {
+            System.out.println("Data pelanggan yang tersimpan:");
+            System.out.println();
+
+            for (int i = 0; i < JumlahPelanggan; i++) {
+                System.out.println((i + 1) + ". " + nama[i]);
+            }
+            System.out.println();
+
+            System.out.print("Masukkan nomor data pelanggan yang ingin dihapus (1-" + JumlahPelanggan + "): ");
+            int nomor = Integer.parseInt(input.readLine());
+            System.out.println();
+
+            if (nomor < 1 || nomor > JumlahPelanggan) {
+                System.out.println("Nomor data pelanggan tidak valid. Silakan coba lagi.");
+                System.out.println();
+            } else {
+                for (int i = nomor - 1; i < JumlahPelanggan - 1; i++) {
+                    nama[i] = nama[i + 1];
+                    noHP[i] = noHP[i + 1];
+                    for (int j = 0; j < 10; j++) {
+                        layanan[i][j] = layanan[i + 1][j];
+                        hrg[i][j] = hrg[i + 1][j];
+                    }
+                }
+
+                JumlahPelanggan--;
+
+                System.out.println("Data pelanggan berhasil dihapus.");
+                System.out.println();
+            }
+        }
+        menu();
+    }
+    public static void laporan() throws IOException {
+        System.out.println("CETAK NOTA");
+        System.out.println();
+        if (JumlahPelanggan == 0) {
+            System.out.println("Belum ada data pelanggan yang tersimpan.");
+            System.out.println();
+        } else {
+            System.out.println("Data pelanggan yang tersimpan:");
+            System.out.println();
+
+            for (int i = 0; i < JumlahPelanggan; i++) {
+                System.out.println((i + 1) + ". " + nama[i]);
+            }
+            System.out.println();
+
+            System.out.print("Masukkan nomor data pelanggan yang ingin dilihat  (1-" + JumlahPelanggan + "): ");
+            int nomor = Integer.parseInt(input.readLine());
+            System.out.println();
+
+            if (nomor < 1 || nomor > JumlahPelanggan) {
+                System.out.println("Nomor data pelanggan tidak valid. Silakan coba lagi.");
+                System.out.println();
+            } else {
+                System.out.println("Data pelanggan KIA MOTOR PEKALONGAN:");
+                System.out.println();
+                System.out.println("Nama pelanggan: " + nama[nomor - 1]);
+                System.out.println("Nomor HP pelanggan: " + noHP[nomor - 1]);
+                System.out.println("Jenis Layanan pelanggan: " + concatenateServices(nomor - 1));
+                System.out.println("Biaya Layanan pelanggan: " + calculateTotalServicePrice(nomor - 1));
+                System.out.println();
+            }
+            
+        }
+         menu();
+    }
+    
+
+
+    private static String concatenateServices(int nomor) {
+        StringBuilder result = new StringBuilder();
+        for (int i = 0; i < 10; i++) {
+            if (layanan[nomor][i] != null) {
+                result.append(layanan[nomor][i]).append(", ");
+            }
+        }
+        if (result.length() > 0) {
+            result.delete(result.length() - 2, result.length());
+        }
+        return result.toString();
+    }
+
+    private static double calculateTotalServicePrice(int nomor) {
+    double total = 0;
+    for (int i = 0; i < 10; i++) {
+        total += hrg[nomor][i];
+    }
+    return total;
+}
+
+    private static String getServiceName(int klayanan) {
+        switch (klayanan) {
+            case 1:
+                return "Servis Ringan + Ganti Oli";
+            case 2:
+                return "Ganti Oli";
+            case 3:
+                return "Service 4 Ban + Ganti 4 Kampas Rem";
+            case 4:
+                return "Ganti Aki";
+            case 5:
+                return "Service Rutin 20KM";
+            default:
+                return "";
+        }
+    }
+
+    private static double getServicePrice(int klayanan) {
+        switch (klayanan) {
+            case 1:
+                return 800000;
+            case 2:
+                return 400000;
+            case 3:
+                return 600000;
+            case 4:
+                return 1100000;
+            case 5:
+                return 1300000;    
+            default:
+                return 0;
+        }
+    }
+}
